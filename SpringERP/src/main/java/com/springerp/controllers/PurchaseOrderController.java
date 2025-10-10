@@ -1,7 +1,7 @@
 package com.springerp.controllers;
 
 import com.springerp.dtos.PurchaseOrderCreateDto;
-import com.springerp.models.PurchaseOrderHeader;
+import com.springerp.dtos.PurchaseOrderHeaderReadDto;
 import com.springerp.services.PurchaseOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,14 +18,14 @@ public class PurchaseOrderController {
     private final PurchaseOrderService purchaseOrderService;
 
     @PostMapping
-    public ResponseEntity<PurchaseOrderHeader> createPO(@RequestBody PurchaseOrderCreateDto dto) {
-        PurchaseOrderHeader createdPO = purchaseOrderService.createPurchaseOrder(dto);
+    public ResponseEntity<PurchaseOrderHeaderReadDto> createPO(@RequestBody PurchaseOrderCreateDto dto) {
+        PurchaseOrderHeaderReadDto createdPO = purchaseOrderService.createPurchaseOrder(dto);
         return new ResponseEntity<>(createdPO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PurchaseOrderHeader> updatePO(@PathVariable Long id, @RequestBody PurchaseOrderCreateDto dto) {
-        PurchaseOrderHeader updatedPO = purchaseOrderService.updatePurchaseOrder(id, dto);
+    public ResponseEntity<PurchaseOrderHeaderReadDto> updatePO(@PathVariable Long id, @RequestBody PurchaseOrderCreateDto dto) {
+        PurchaseOrderHeaderReadDto updatedPO = purchaseOrderService.updatePurchaseOrder(id, dto);
         return ResponseEntity.ok(updatedPO);
     }
 
@@ -36,24 +36,24 @@ public class PurchaseOrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PurchaseOrderHeader> getPOById(@PathVariable Long id) {
+    public ResponseEntity<PurchaseOrderHeaderReadDto> getPOById(@PathVariable Long id) {
         return ResponseEntity.ok(purchaseOrderService.findById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<PurchaseOrderHeader>> getAllPOs() {
+    public ResponseEntity<List<PurchaseOrderHeaderReadDto>> getAllPOs() {
         return ResponseEntity.ok(purchaseOrderService.findAll());
     }
 
     @PostMapping("/{id}/approve")
-    public ResponseEntity<PurchaseOrderHeader> approvePO(@PathVariable Long id) {
-        PurchaseOrderHeader approvedPO = purchaseOrderService.approvePurchaseOrder(id);
+    public ResponseEntity<PurchaseOrderHeaderReadDto> approvePO(@PathVariable Long id) {
+        PurchaseOrderHeaderReadDto approvedPO = purchaseOrderService.approvePurchaseOrder(id);
         return ResponseEntity.ok(approvedPO);
     }
 
     @PostMapping("/{id}/receive")
-    public ResponseEntity<PurchaseOrderHeader> receiveGoodsForPO(@PathVariable Long id) {
-        PurchaseOrderHeader receivedPO = purchaseOrderService.receiveGoods(id);
+    public ResponseEntity<PurchaseOrderHeaderReadDto> receiveGoodsForPO(@PathVariable Long id) {
+        PurchaseOrderHeaderReadDto receivedPO = purchaseOrderService.receiveGoods(id);
         return ResponseEntity.ok(receivedPO);
     }
 }
