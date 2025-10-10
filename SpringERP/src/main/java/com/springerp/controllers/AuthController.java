@@ -1,8 +1,8 @@
-package com.springerp.controller;
+package com.springerp.controllers;
 
 import com.springerp.security.JwtRequest;
 import com.springerp.security.JwtResponse;
-import com.springerp.service.AuthService;
+import com.springerp.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

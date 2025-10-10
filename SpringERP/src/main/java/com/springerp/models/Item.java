@@ -17,6 +17,7 @@ public class Item extends BaseEntity {
 
     private String itemCode;
     private String itemName;
+    private BigDecimal quantityInStock = BigDecimal.ZERO;
     private String unit;
     private BigDecimal price;
     private String description;

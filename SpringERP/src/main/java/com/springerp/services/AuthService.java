@@ -1,7 +1,7 @@
-package com.springerp.service;
+package com.springerp.services;
 
-import com.springerp.repository.UserRepository;
-import com.springerp.repository.RoleRepository;
+import com.springerp.repositories.UserRepository;
+import com.springerp.repositories.RoleRepository;
 import com.springerp.security.JwtUtil;
 import com.springerp.security.JwtRequest;
 import com.springerp.security.JwtResponse;

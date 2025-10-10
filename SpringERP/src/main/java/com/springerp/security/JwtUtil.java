@@ -32,7 +32,7 @@ public class JwtUtil {
     // Parse token
     private Claims parseToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)           // dùng Key thay vì String
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

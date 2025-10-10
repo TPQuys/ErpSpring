@@ -1,7 +1,7 @@
 package com.springerp;
 
 import com.springerp.models.Role;
-import com.springerp.repository.RoleRepository;
+import com.springerp.repositories.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

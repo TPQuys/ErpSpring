@@ -1,4 +1,4 @@
-package com.springerp.repository;
+package com.springerp.repositories;
 
 import com.springerp.models.Invoice;
 import com.springerp.models.Invoice.RefType;

@@ -1,4 +1,4 @@
-package com.springerp.repository;
+package com.springerp.repositories;
 
 import com.springerp.models.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
