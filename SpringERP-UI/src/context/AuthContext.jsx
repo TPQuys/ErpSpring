@@ -1,4 +1,3 @@
-// src/context/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { loginApi } from '../api/auth';
 import axios from 'axios';
@@ -25,17 +24,17 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  const login = useCallback(async (username, password) => {
+const login = useCallback(async (username, password) => {
     setLoading(true);
     try {
-      const jwtToken = await loginApi(username, password);
-      localStorage.setItem('authToken', jwtToken);
-      setToken(jwtToken);
-      return jwtToken;
+        const jwtToken = await loginApi(username, password);
+        localStorage.setItem('authToken', jwtToken);
+        setToken(jwtToken);
+        return jwtToken;
     } finally {
-      setLoading(false);
+        setLoading(false); 
     }
-  }, []);
+}, []);
 
   const logout = useCallback(() => {
     localStorage.removeItem('authToken');

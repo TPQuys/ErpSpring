@@ -20,6 +20,6 @@ public class ItemCreateUpdateDto {
     @NotNull(message = "Giá bán không được để trống")
     @PositiveOrZero(message = "Giá bán phải lớn hơn hoặc bằng 0")
     private BigDecimal price;
-
     private String description;
+    private boolean isActive;
 }

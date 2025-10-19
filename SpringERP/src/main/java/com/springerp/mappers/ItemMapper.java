@@ -19,8 +19,7 @@ public class ItemMapper {
         dto.setUnit(entity.getUnit());
         dto.setPrice(entity.getPrice());
         dto.setDescription(entity.getDescription());
-
-
+        dto.setActive(entity.isActive());
         return dto;
     }
 
@@ -35,7 +34,7 @@ public class ItemMapper {
         entity.setPrice(dto.getPrice());
         entity.setDescription(dto.getDescription());
         entity.setQuantityInStock(java.math.BigDecimal.ZERO); // Mặc định khi tạo
-
+        entity.setActive(dto.isActive());
         return entity;
     }
 
@@ -48,5 +47,6 @@ public class ItemMapper {
         entity.setUnit(dto.getUnit());
         entity.setPrice(dto.getPrice());
         entity.setDescription(dto.getDescription());
+        entity.setActive(dto.isActive());
     }
 }
