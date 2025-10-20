@@ -93,3 +93,13 @@ export const getItemById = async (id) => {
     }
 };
 
+export const getAllItemTypes = async () => {
+    try {
+        const response = await apiClient.get('/items/types');
+        return response.data; 
+    } catch (error) {
+        console.error("Error fetching item types:", error);
+        throw new Error("Không thể tải danh sách loại sản phẩm.");
+    }
+};
+

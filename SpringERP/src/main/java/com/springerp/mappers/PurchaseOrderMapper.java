@@ -9,14 +9,6 @@ import java.util.stream.Collectors;
 @Component
 public class PurchaseOrderMapper {
 
-    // -------------------------------------------------------------------------
-    // PRIMARY MAPPERS: Entity to Read DTO
-    // -------------------------------------------------------------------------
-
-    /**
-     * Maps PurchaseOrderHeader Entity to PurchaseOrderHeaderReadDto.
-     * This is the main method for response serialization.
-     */
     public PurchaseOrderHeaderReadDto toDto(PurchaseOrderHeader entity) {
         if (entity == null) return null;
 
@@ -45,9 +37,6 @@ public class PurchaseOrderMapper {
         return dto;
     }
 
-    /**
-     * Maps PurchaseOrderLine Entity to PurchaseOrderLineReadDto.
-     */
     public PurchaseOrderLineReadDto toDto(PurchaseOrderLine entity) {
         if (entity == null) return null;
 
@@ -67,13 +56,6 @@ public class PurchaseOrderMapper {
         return dto;
     }
 
-    // -------------------------------------------------------------------------
-    // SECONDARY MAPPERS: Supporting entities
-    // -------------------------------------------------------------------------
-
-    /**
-     * Maps User Entity to UserDto.
-     */
     public UserDto toDto(User entity) {
         if (entity == null) return null;
 
@@ -93,9 +75,6 @@ public class PurchaseOrderMapper {
         return dto;
     }
 
-    /**
-     * Maps Role Entity to RoleDto.
-     */
     public RoleDto toDto(Role entity) {
         if (entity == null) return null;
 
@@ -106,9 +85,6 @@ public class PurchaseOrderMapper {
         return dto;
     }
 
-    /**
-     * Maps Vendor Entity to VendorDto.
-     */
     public VendorDto toDto(Vendor entity) {
         if (entity == null) return null;
 
@@ -123,18 +99,20 @@ public class PurchaseOrderMapper {
         return dto;
     }
 
-    /**
-     * Maps Item Entity to the simplified ItemInfo DTO.
-     */
     public ItemDto toItemInfo(Item entity) {
         if (entity == null) return null;
 
         ItemDto dto = new ItemDto();
         dto.setItemId(entity.getItemId());
         dto.setItemCode(entity.getItemCode());
-        dto.setItemName(entity.getItemName());
-        dto.setUnit(entity.getUnit());
-        dto.setPrice(entity.getPrice()); // Bao gồm price để hiển thị giá đơn vị trong PO Line
+
+        dto.setName(entity.getName());
+        dto.setStockUnit(entity.getStockUnit());
+        dto.setSellingPrice(entity.getSellingPrice());
+
+        dto.setBrand(entity.getBrand());
+        dto.setItemType(entity.getItemType());
+
 
         return dto;
     }

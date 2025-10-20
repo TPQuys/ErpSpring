@@ -48,4 +48,10 @@ public class ItemController {
         itemService.deleteItem(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/types")
+    public ResponseEntity<List<String>> getItemTypes() {
+        List<String> types = itemService.getAllItemTypes();
+        return ResponseEntity.ok(types);
+    }
 }

@@ -2,6 +2,7 @@ package com.springerp.services;
 
 import com.springerp.dtos.ItemCreateUpdateDto;
 import com.springerp.dtos.ItemDto;
+import com.springerp.enums.ItemType;
 import com.springerp.mappers.ItemMapper;
 import com.springerp.models.Item;
 import com.springerp.repositories.ItemRepository;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -84,7 +86,13 @@ public class ItemService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Không tìm thấy mặt hàng với ID: " + itemId));
 
-        item.setQuantityInStock(item.getQuantityInStock().add(quantity));
+        item.setCurrentStock(item.getCurrentStock().add(quantity));
         itemRepository.save(item);
+    }
+
+    public List<String> getAllItemTypes() {
+        return Stream.of(ItemType.values())
+                .map(ItemType::name)
+                .collect(Collectors.toList());
     }
 }

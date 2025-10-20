@@ -12,41 +12,77 @@ public class ItemMapper {
         if (entity == null) return null;
 
         ItemDto dto = new ItemDto();
+
         dto.setItemId(entity.getItemId());
         dto.setItemCode(entity.getItemCode());
-        dto.setItemName(entity.getItemName());
-        dto.setQuantityInStock(entity.getQuantityInStock());
-        dto.setUnit(entity.getUnit());
-        dto.setPrice(entity.getPrice());
-        dto.setDescription(entity.getDescription());
-        dto.setActive(entity.isActive());
+        dto.setName(entity.getName());
+
+        dto.setItemType(entity.getItemType());
+        dto.setBrand(entity.getBrand());
+        dto.setModelNumber(entity.getModelNumber());
+        dto.setSpecifications(entity.getSpecifications());
+
+        dto.setCurrentStock(entity.getCurrentStock());
+        dto.setStockUnit(entity.getStockUnit());
+        dto.setSellingPrice(entity.getSellingPrice());
+        dto.setCostPrice(entity.getCostPrice());
+
+        dto.setNotes(entity.getNotes());
+        dto.setLaunchDate(entity.getLaunchDate());
+        dto.setDiscontinued(entity.isDiscontinued());
+
+        dto.setCreatedAt(entity.getCreatedAt());
+        dto.setUpdatedAt(entity.getUpdatedAt());
+
         return dto;
     }
+
 
 
     public Item toEntity(ItemCreateUpdateDto dto) {
         if (dto == null) return null;
 
         Item entity = new Item();
+
         entity.setItemCode(dto.getItemCode());
-        entity.setItemName(dto.getItemName());
-        entity.setUnit(dto.getUnit());
-        entity.setPrice(dto.getPrice());
-        entity.setDescription(dto.getDescription());
-        entity.setQuantityInStock(java.math.BigDecimal.ZERO); // Mặc định khi tạo
-        entity.setActive(dto.isActive());
+        entity.setName(dto.getName());
+
+        entity.setItemType(dto.getItemType());
+        entity.setBrand(dto.getBrand());
+        entity.setModelNumber(dto.getModelNumber());
+        entity.setSpecifications(dto.getSpecifications());
+
+        entity.setStockUnit(dto.getStockUnit());
+        entity.setSellingPrice(dto.getSellingPrice());
+        entity.setCostPrice(dto.getCostPrice());
+
+        entity.setNotes(dto.getNotes());
+        entity.setDiscontinued(dto.isDiscontinued());
+
+        entity.setCurrentStock(java.math.BigDecimal.ZERO);
+
         return entity;
     }
+
 
 
     public void updateEntityFromDto(ItemCreateUpdateDto dto, Item entity) {
         if (dto == null || entity == null) return;
 
-        entity.setItemCode(dto.getItemCode());
-        entity.setItemName(dto.getItemName());
-        entity.setUnit(dto.getUnit());
-        entity.setPrice(dto.getPrice());
-        entity.setDescription(dto.getDescription());
-        entity.setActive(dto.isActive());
+
+        entity.setName(dto.getName());
+
+        entity.setItemType(dto.getItemType());
+        entity.setBrand(dto.getBrand());
+        entity.setModelNumber(dto.getModelNumber());
+        entity.setSpecifications(dto.getSpecifications());
+
+        entity.setStockUnit(dto.getStockUnit());
+        entity.setSellingPrice(dto.getSellingPrice());
+        entity.setCostPrice(dto.getCostPrice());
+
+        entity.setNotes(dto.getNotes());
+        entity.setDiscontinued(dto.isDiscontinued());
+
     }
 }

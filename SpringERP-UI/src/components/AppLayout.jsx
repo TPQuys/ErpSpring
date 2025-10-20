@@ -22,8 +22,8 @@ const AppLayout = ({ children }) => {
                 
                 <Content 
                     style={{ 
-                        margin: '24px 16px', 
-                        padding: 24, 
+                        margin: '16px 16px', 
+                        padding: 16, 
                         minHeight: 280, 
                         background: '#fff' 
                     }}
