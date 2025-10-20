@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Col, Row, InputNumber, Select, Divider } from 'antd';
-import units from '../../../data/units.json'; // Danh sách Đơn vị (Ví dụ: Chiếc, Bộ, Kg)
-import itemTypes from '../../../data/itemTypes.json'; // Danh sách Loại SP (Ví dụ: LAPTOP, SMARTPHONE)
+import units from '../../../data/units.json';
+import itemTypes from '../../../data/itemTypes.json';
 
 const { Option } = Select;
 
@@ -10,29 +10,26 @@ const ItemFormContent = ({ form, isEditing }) => {
         <Form
             form={form}
             layout="vertical"
-            // ✅ Cập nhật initialValues theo Entity/DTO mới
             initialValues={{ 
                 currentStock: 0, 
                 stockUnit: 'Chiếc', 
                 isDiscontinued: false 
             }}
         >
-            {/* Hàng 1: Mã SP và Tên SP */}
             <Row gutter={24}>
                 <Col span={12}>
                     <Form.Item
                         name="itemCode"
-                        label="Mã Sản Phẩm" // ✅ Đổi label
+                        label="Mã Sản Phẩm"
                         rules={[{ required: true, message: 'Vui lòng nhập mã sản phẩm!' }]}
                     >
-                        {/* Mã SP không được sửa khi chỉnh sửa */}
                         <Input placeholder="Ví dụ: ITM-005" disabled={isEditing} /> 
                     </Form.Item>
                 </Col>
                 <Col span={12}>
                     <Form.Item
-                        name="name" // ✅ Đã sửa từ itemName
-                        label="Tên Sản Phẩm" // ✅ Đổi label
+                        name="name" 
+                        label="Tên Sản Phẩm" 
                         rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm!' }]}
                     >
                         <Input placeholder="Ví dụ: Laptop Dell XPS 15" />
@@ -42,16 +39,14 @@ const ItemFormContent = ({ form, isEditing }) => {
             
             <Divider orientation="left" plain>Thông số Kỹ thuật & Phân loại</Divider>
 
-            {/* Hàng 2: Loại SP, Thương hiệu, Model */}
             <Row gutter={24}>
                 <Col span={8}>
                     <Form.Item
-                        name="itemType" // ✅ Thêm ItemType
+                        name="itemType" 
                         label="Loại Sản Phẩm"
                         rules={[{ required: true, message: 'Vui lòng chọn loại sản phẩm!' }]}
                     >
                         <Select placeholder="Chọn loại (Ví dụ: LAPTOP)">
-                            {/* Giả định itemTypes là một mảng chuỗi (Enum values) */}
                             {itemTypes.map((type) => ( 
                                 <Option key={type} value={type}>
                                     {type.replace(/_/g, ' ')} 
@@ -62,7 +57,7 @@ const ItemFormContent = ({ form, isEditing }) => {
                 </Col>
                 <Col span={8}>
                     <Form.Item
-                        name="brand" // ✅ Thêm Brand
+                        name="brand"
                         label="Thương Hiệu"
                     >
                         <Input placeholder="Ví dụ: Samsung, Apple" />
@@ -70,7 +65,7 @@ const ItemFormContent = ({ form, isEditing }) => {
                 </Col>
                 <Col span={8}>
                     <Form.Item
-                        name="modelNumber" // ✅ Thêm ModelNumber
+                        name="modelNumber" 
                         label="Model/Part No."
                     >
                         <Input placeholder="Ví dụ: P9320" />
@@ -79,7 +74,7 @@ const ItemFormContent = ({ form, isEditing }) => {
             </Row>
             
             <Form.Item 
-                name="specifications" // ✅ Thêm Specifications
+                name="specifications" 
                 label="Thông Số Kỹ Thuật Chi Tiết"
             >
                 <Input.TextArea rows={2} placeholder="Ví dụ: Core i7, RAM 16GB, SSD 512GB" />
@@ -87,11 +82,10 @@ const ItemFormContent = ({ form, isEditing }) => {
 
             <Divider orientation="left" plain>Giá cả & Tồn kho</Divider>
             
-            {/* Hàng 3: Đơn vị, Tồn kho, Giá bán, Giá vốn */}
             <Row gutter={24}>
                 <Col span={6}>
                     <Form.Item
-                        name="stockUnit" // ✅ Đã sửa từ unit
+                        name="stockUnit" 
                         label="Đơn Vị Tính"
                         rules={[{ required: true, message: 'Vui lòng chọn đơn vị!' }]}
                     >
@@ -106,17 +100,16 @@ const ItemFormContent = ({ form, isEditing }) => {
                 </Col>
                 <Col span={6}>
                     <Form.Item
-                        name="currentStock" // ✅ Đã sửa từ quantityInStock
+                        name="currentStock" 
                         label="Tồn Kho Khởi tạo"
                         rules={[{ required: true, message: 'Vui lòng nhập số lượng!' }]}
                     >
-                        {/* Tồn kho không cho phép sửa khi chỉnh sửa */}
                         <InputNumber min={0} style={{ width: '100%' }} disabled={isEditing} /> 
                     </Form.Item>
                 </Col>
                 <Col span={6}>
                     <Form.Item
-                        name="sellingPrice" // ✅ Đã sửa từ price
+                        name="sellingPrice" 
                         label="Giá Bán (VND)"
                         rules={[{ required: true, message: 'Vui lòng nhập giá bán!' }]}
                     >
@@ -130,7 +123,7 @@ const ItemFormContent = ({ form, isEditing }) => {
                 </Col>
                 <Col span={6}>
                     <Form.Item
-                        name="costPrice" // ✅ Thêm CostPrice
+                        name="costPrice" 
                         label="Giá Vốn (VND)"
                         rules={[{ required: true, message: 'Vui lòng nhập giá vốn!' }]}
                     >
@@ -149,7 +142,7 @@ const ItemFormContent = ({ form, isEditing }) => {
             <Row gutter={24}>
                 <Col span={18}>
                     <Form.Item 
-                        name="notes" // 
+                        name="notes" 
                         label="Ghi Chú Chi Tiết"
                     >
                         <Input.TextArea rows={2} />
@@ -159,7 +152,6 @@ const ItemFormContent = ({ form, isEditing }) => {
                     <Form.Item 
                         name="discontinued" 
                         label="Trạng Thái Kinh Doanh"
-                        // initialValue={false} 
                     >
                         <Select>
                             <Option value={false}>Đang bán (Hoạt động)</Option>

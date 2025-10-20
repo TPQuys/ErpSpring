@@ -81,7 +81,6 @@ const ItemListPage = () => {
         }
     };
 
-    // Định nghĩa cột cho Ant Design Table
     const columns = getItemColumns(handleEdit, handleDelete);
 
     return (
@@ -98,7 +97,7 @@ const ItemListPage = () => {
                     </Button>
                 }
             >
-                <div style={{ marginBottom: 16 }}>
+                <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
                     <Input
                         placeholder="Tìm kiếm theo Mã hoặc Tên mặt hàng"
                         prefix={<SearchOutlined />}

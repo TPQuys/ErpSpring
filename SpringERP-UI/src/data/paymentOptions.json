@@ -1,0 +1,10 @@
+[
+  "Thanh toán ngay (Due upon receipt)",
+  "Net 7 (Thanh toán trong 7 ngày)",
+  "Net 15 (Thanh toán trong 15 ngày)",
+  "Net 30 (Thanh toán trong 30 ngày)",
+  "Net 45 (Thanh toán trong 45 ngày)",
+  "Net 60 (Thanh toán trong 60 ngày)",
+  "2/10 Net 30 (Giảm 2% nếu TT trong 10 ngày, nếu không thì TT trong 30 ngày)",
+  "COD (Cash on Delivery)"
+]

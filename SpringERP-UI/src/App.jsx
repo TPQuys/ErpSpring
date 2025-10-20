@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import ItemsPage from './pages/Items/ItemListPage';
+import VendorPage from './pages/venders/VendorListPage';
 // eslint-disable-next-line no-unused-vars
 import { useAuth } from './context/AuthContext';
 import { App as AntdApp } from "antd";
@@ -33,6 +34,7 @@ function App() {
       <Route path="/dashboard" element={<PrivateLayoutRoute element={<DashboardPage />} />} />
       <Route path="/purchase-orders" element={<PrivateLayoutRoute element={<PurchaseOrdersPage />} />} />
       <Route path="/items" element={<PrivateLayoutRoute element={<ItemsPage />} />} />
+      <Route path="/vendors" element={<PrivateLayoutRoute element={<VendorPage />} />} />
       <Route path="/users" element={<PrivateLayoutRoute element={<UsersPage />} />} />
 
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
