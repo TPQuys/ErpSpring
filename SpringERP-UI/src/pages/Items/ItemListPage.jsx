@@ -1,40 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Table, Button, Space, Card, Input, Tag, message, Layout } from 'antd';
+import React, { useState, useRef, useEffect } from 'react';
+import { Table, Button, Space, Card, Input, Tag, Layout } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
-import { getItemList, deleteItem } from '../../api/itemApi';
 import { getItemColumns } from './itemListColumns';
 import ItemModal from './modal/ItemModal';
 import { notify } from '../../components/notify';
+import { useItemContext } from '../../context/ItemContext';
 const { Content } = Layout;
-
-
 const ItemListPage = () => {
+    const { allItems, loadingItems, updateItems, addItems, deleteItems } = useItemContext();
     const [items, setItems] = useState([]);
-    const [allItems, setAllItems] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [modalVisible, setModalVisible] = useState(false); 
     const [editingItem, setEditingItem] = useState(null);
 
     const debounceTimeout = useRef(null);
 
-    const loadItems = async () => {
-        setLoading(true);
-        try {
-            const data = await getItemList();
-            console.log('Loaded items:', data);
-            setItems(data);
-            setAllItems(data);
-        } catch (error) {
-            console.log('Load items error:', error);
-            message.error('Lỗi khi tải dữ liệu mặt hàng.');
-        }
-        setLoading(false);
-    };
-
     useEffect(() => {
-        loadItems();
-    }, []);
+        setItems(allItems);
+    }, [allItems]);
 
   const handleSearch = (value) => {
     setSearchText(value);
@@ -69,12 +52,9 @@ const ItemListPage = () => {
     const handleDelete = async (itemId) => {
         if (window.confirm('Bạn có chắc chắn muốn xóa mặt hàng này?')) {
             try {
-                await deleteItem(itemId);
-                message.success('Xóa mặt hàng thành công.');
-                loadItems(); 
+                await deleteItems(itemId);
             } catch (error) {
                 console.error("Delete error: ", error)
-                notify.error('Không thể xóa mặt hàng. Vui lòng thử lại.');
             }
             setItems(items.filter(item => item.itemId !== itemId));
             notify.success('Xóa mặt hàng thành công.');
@@ -111,7 +91,7 @@ const ItemListPage = () => {
                     columns={columns}
                     dataSource={items}
                     rowKey="itemId"
-                    loading={loading}
+                    loading={loadingItems}
                     pagination={{ pageSize: 10 }}
                     scroll={{ x: 'max-content' }}
                 />
@@ -120,7 +100,8 @@ const ItemListPage = () => {
                 visible={modalVisible}
                 itemToEdit={editingItem}
                 onCancel={() => setModalVisible(false)}
-                onSuccess={loadItems}
+                addItem={addItems}
+                updateItem={updateItems}
             />
         </Content>
     );

@@ -5,6 +5,7 @@ export const getItemList = async () => {
         const response = await apiClient.get('/items');
         const data = response.data;
         if (data) {
+            console.log('Item list fetched:', data);
             return data;
         } else {
             throw new Error("Lấy danh sách sản phẩm thất bại.");

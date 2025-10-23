@@ -3,14 +3,14 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import ItemsPage from './pages/Items/ItemListPage';
 import VendorPage from './pages/venders/VendorListPage';
+import PurchaseOrdersPage from './pages/puchaseOrders/POListPage';
 // eslint-disable-next-line no-unused-vars
 import { useAuth } from './context/AuthContext';
 import { App as AntdApp } from "antd";
 
-import AppLayout from './components/AppLayout';
+import AppLayout from './layout/AppLayout';
 import DashboardPage from './pages/DashboardPage';
 import { setNotifyInstance } from './components/notify';
-const PurchaseOrdersPage = () => <h1>Quản lý Đơn Mua hàng</h1>;
 const UsersPage = () => <h1>Quản lý Người dùng</h1>;
 
 

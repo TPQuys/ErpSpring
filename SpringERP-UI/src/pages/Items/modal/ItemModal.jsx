@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Space, Form } from 'antd';
-import { notify } from '../../../components/notify';
 import ItemFormContent from './ItemFormContent'; 
-import { addItem, updateItem } from '../../../api/itemApi'; 
 
-const ItemModal = ({ visible, onCancel, onSuccess, itemToEdit }) => {
+const ItemModal = ({ visible, onCancel, itemToEdit, addItem, updateItem }) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const isEditing = !!itemToEdit && !!itemToEdit.itemId; 
@@ -14,7 +12,6 @@ const ItemModal = ({ visible, onCancel, onSuccess, itemToEdit }) => {
             form.resetFields(); 
             if (isEditing) {
                 setLoading(true);
-    
                 form.setFieldsValue(itemToEdit);
                 setLoading(false);
             }
@@ -31,15 +28,10 @@ const ItemModal = ({ visible, onCancel, onSuccess, itemToEdit }) => {
             } else {
                 await addItem(values);
             }
-            
-            notify.success(`Mặt hàng đã được ${isEditing ? 'cập nhật' : 'tạo mới'} thành công!`);
-            onSuccess(); 
             onCancel(); 
 
         } catch (error) {
             console.error('Save item error:', error);
-            const errorMessage = error.message || `Lỗi khi ${isEditing ? 'cập nhật' : 'tạo mới'} mặt hàng.`;
-            notify.error(errorMessage);
         } finally {
             setLoading(false);
         }

@@ -8,12 +8,11 @@ export const StyledCard = styled(Card)`
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 
-  /* Tùy chỉnh tiêu đề của Card */
   .ant-card-head {
     text-align: center;
     font-size: 1.5em;
     font-weight: 600;
-    color: #001529; /* Màu tối hơn */
-    border-bottom: 2px solid #007bff; /* Thêm đường viền nổi bật */
+    color: #001529;
+    border-bottom: 2px solid #007bff; 
   }
 `;

@@ -1,19 +1,16 @@
 import React, { useEffect } from 'react';
 import { Modal, Form, message } from 'antd';
 import VendorFormContent from './VendorFormContent';
-import { createVendor, updateVendor } from '../../../api/vendorApi'; 
 
-const VendorModal = ({ visible, onCancel, onSuccess, vendorToEdit }) => {
+const VendorModal = ({ visible, onCancel, onSuccess, vendorToEdit, createVendor, updateVendor }) => {
     const [form] = Form.useForm();
     const isEditing = !!vendorToEdit;
 
     useEffect(() => {
         if (visible) {
             if (isEditing) {
-                // Đặt giá trị form khi chỉnh sửa
                 form.setFieldsValue(vendorToEdit);
             } else {
-                // Reset form khi thêm mới
                 form.resetFields();
             }
         }
@@ -24,11 +21,9 @@ const VendorModal = ({ visible, onCancel, onSuccess, vendorToEdit }) => {
             const values = await form.validateFields();
             
             if (isEditing) {
-                // GỬI API CẬP NHẬT
                 await updateVendor(vendorToEdit.vendorId, values);
                 message.success('Cập nhật nhà cung cấp thành công!');
             } else {
-                // GỬI API TẠO MỚI
                 await createVendor(values);
                 message.success('Thêm nhà cung cấp mới thành công!');
             }
@@ -46,7 +41,7 @@ const VendorModal = ({ visible, onCancel, onSuccess, vendorToEdit }) => {
             onCancel={onCancel}
             onOk={handleOk}
             width={800}
-            destroyOnClose={true} // Tự động reset khi đóng
+            destroyOnHidden={true} // Tự động reset khi đóng
         >
             {/* Truyền form instance xuống VendorFormContent */}
             <VendorFormContent form={form} isEditing={isEditing} />

@@ -3,24 +3,21 @@ import React from 'react';
 import { Layout, Menu, Breadcrumb, Card, Row, Col, Statistic, Table, Tag } from 'antd';
 import { ShoppingCartOutlined, DollarCircleOutlined, StockOutlined, UserOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import { useAuth } from '../context/AuthContext'; // Để lấy thông tin người dùng
+import { useAuth } from '../context/AuthContext'; 
 
 const { Header, Content, Footer, Sider } = Layout;
 
-// Styled Component cho khu vực chính (Nếu bạn muốn tùy chỉnh layout ngoài AntD)
 const DashboardContent = styled(Content)`
     padding: 24px;
     min-height: 280px;
 `;
 
-// Styled Component cho tiêu đề
 const PageHeader = styled.h1`
     margin-bottom: 24px;
     font-size: 1.8em;
     color: #001529;
 `;
 
-// Dữ liệu mẫu cho Dashboard
 const mockData = {
     totalPO: 125,
     pendingPO: 15,

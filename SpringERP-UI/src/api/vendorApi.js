@@ -4,6 +4,7 @@ import apiClient from './axiosConfig';
 export const getVendorList = async () => {
     try {
         const response = await apiClient.get('/vendors');
+        console.log('Vendor list fetched:', response.data);
         return response.data; 
     } catch (error) {
         console.error('Get vendor list API error:', error.response?.data);
@@ -11,7 +12,6 @@ export const getVendorList = async () => {
         throw new Error(errorMessage);
     }
 };
-
 
 export const createVendor = async (vendor) => {
     try {

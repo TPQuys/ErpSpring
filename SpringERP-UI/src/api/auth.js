@@ -7,7 +7,8 @@ export const loginApi = async (username, password) => {
             password
         });
 
-        const token = response.data.token;
+        const token = response.data.jwtToken;
+        console.log('Login API token:', response.data);
 
         if (token) {
             return token;

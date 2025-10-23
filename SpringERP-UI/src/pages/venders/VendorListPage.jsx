@@ -1,36 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, Card, Input, message, Layout } from 'antd';
+import { Table, Button, Space, Card, Input, Layout } from 'antd';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import { getVendorList, deleteVendor } from '../../api/vendorApi'; 
 import { getVendorColumns } from './vendorListColumns';
+import { useVendorContext } from '../../context/VendorContext';
 import VendorModal from './modal/VendorModal';
-import { notify } from '../../components/notify';
 const { Content } = Layout;
 
 const VendorListPage = () => {
+    const {allVendors, loadingVendors, deleteExistingVendor, createNewVendor, updateExistingVendor} = useVendorContext();
     const [vendors, setVendors] = useState([]);
-    const [allVendors, setAllVendors] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [modalVisible, setModalVisible] = useState(false); 
     const [editingVendor, setEditingVendor] = useState(null);
 
-    const loadVendors = async () => {
-        setLoading(true);
-        try {
-            const data = await getVendorList();
-            setVendors(data);
-            setAllVendors(data);
-        } catch (error) {
-            console.error('Load vendors error:', error);
-            message.error('Lỗi khi tải dữ liệu nhà cung cấp.');
-        }
-        setLoading(false);
-    };
 
     useEffect(() => {
-        loadVendors();
-    }, []);
+        setVendors(allVendors);
+    }, [allVendors]);
 
     const handleSearch = (value) => {
         setSearchText(value);
@@ -64,12 +50,9 @@ const VendorListPage = () => {
     const handleDelete = async (vendorId) => {
         if (window.confirm('Bạn có chắc chắn muốn xóa nhà cung cấp này?')) {
             try {
-                await deleteVendor(vendorId);
-                notify.success('Xóa nhà cung cấp thành công.');
-                loadVendors(); 
+                await deleteExistingVendor(vendorId);
             } catch (error) {
                 console.error("Delete error: ", error);
-                notify.error('Không thể xóa nhà cung cấp. Vui lòng thử lại.');
             }
         }
     };
@@ -104,7 +87,7 @@ const VendorListPage = () => {
                     columns={columns}
                     dataSource={vendors}
                     rowKey="vendorId"
-                    loading={loading}
+                    loading={loadingVendors}
                     pagination={{ pageSize: 10 }}
                     scroll={{ x: 'max-content' }}
                 />
@@ -112,10 +95,11 @@ const VendorListPage = () => {
             <VendorModal
                 visible={modalVisible}
                 vendorToEdit={editingVendor}
+                createVendor={createNewVendor}
+                updateVendor={updateExistingVendor}
                 onCancel={() => setModalVisible(false)}
                 onSuccess={() => {
                     setModalVisible(false);
-                    loadVendors();
                 }}
             />
         </Content>
