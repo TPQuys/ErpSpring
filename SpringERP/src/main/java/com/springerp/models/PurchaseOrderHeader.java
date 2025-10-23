@@ -25,7 +25,7 @@ public class PurchaseOrderHeader extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Status status = Status.DRAFT;
 
-    public enum Status { DRAFT, APPROVED, RECEIVED, CLOSED }
+    public enum Status { DRAFT, APPROVED, RECEIVED, CLOSED, CANCELED }
 
     private BigDecimal totalAmount;
 
@@ -36,6 +36,12 @@ public class PurchaseOrderHeader extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private User createdBy;
+
+    private LocalDate requiredDate;
+
+    private String paymentTerms;
+    private String deliveryAddress;
+    private String notes;
 
     @OneToMany(mappedBy = "purchaseOrderHeader", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PurchaseOrderLine> lines;

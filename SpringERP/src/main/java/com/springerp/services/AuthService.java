@@ -4,7 +4,7 @@ import com.springerp.repositories.UserRepository;
 import com.springerp.repositories.RoleRepository;
 import com.springerp.security.JwtUtil;
 import com.springerp.security.JwtRequest;
-import com.springerp.security.JwtResponse;
+import com.springerp.security.JwtResponse; // Sử dụng JwtResponse đã cập nhật
 import com.springerp.security.CustomUserDetailsService;
 import com.springerp.models.User;
 import com.springerp.models.Role;
@@ -15,7 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException; // Import mới
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -45,10 +45,23 @@ public class AuthService {
             );
         }
 
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Không tìm thấy người dùng sau khi xác thực."
+                ));
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         String jwt = jwtUtil.generateToken(userDetails.getUsername());
-        return new JwtResponse(jwt);
+
+        return new JwtResponse(
+                jwt,
+                user.getUserId(),
+                user.getRole().getRoleId(),
+                user.getRole().getRoleName()
+        );
     }
+
 
     public JwtResponse register(JwtRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
@@ -65,14 +78,20 @@ public class AuthService {
         Role role = roleRepository.findByRoleName("USER")
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.INTERNAL_SERVER_ERROR,
-                        "Role mặc định 'USER' chưa được tạo trong hệ thống."
+                        "Role mặc định 'USER' chưa được tạo trong hệ thống. Vui lòng liên hệ quản trị viên."
                 ));
         user.setRole(role);
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getUsername());
         String jwt = jwtUtil.generateToken(userDetails.getUsername());
-        return new JwtResponse(jwt);
+
+        return new JwtResponse(
+                jwt,
+                savedUser.getUserId(),
+                savedUser.getRole().getRoleId(),
+                savedUser.getRole().getRoleName()
+        );
     }
 }

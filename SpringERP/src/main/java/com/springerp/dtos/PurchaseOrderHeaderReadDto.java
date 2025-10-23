@@ -12,10 +12,16 @@ public class PurchaseOrderHeaderReadDto {
     private Long poId;
     private String poNumber;
     private LocalDate orderDate;
+
+    private LocalDate requiredDate;
+
     private PurchaseOrderHeader.Status status;
     private BigDecimal totalAmount;
 
-    // Sử dụng DTO/Info cho các đối tượng liên quan
+    private String paymentTerms;
+    private String deliveryAddress;
+    private String notes;
+
     private VendorDto vendor;
     private UserDto createdBy;
     private List<PurchaseOrderLineReadDto> lines;

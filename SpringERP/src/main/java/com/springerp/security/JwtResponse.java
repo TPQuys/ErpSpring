@@ -1,14 +1,17 @@
+// Giả định: File com.springerp.security.JwtResponse.java đã được cập nhật
+
 package com.springerp.security;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class JwtResponse {
-    private String token;
+    private String jwtToken;
+    private Long userId;
+    private Long roleId;
+    private String roleName;
 }

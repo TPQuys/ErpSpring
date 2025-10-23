@@ -45,15 +45,33 @@ public class PurchaseOrderController {
         return ResponseEntity.ok(purchaseOrderService.findAll());
     }
 
+    // --- CHUYỂN TRẠNG THÁI NGHIỆP VỤ ---
+
+    /** Duyệt đơn hàng: DRAFT -> APPROVED */
     @PostMapping("/{id}/approve")
     public ResponseEntity<PurchaseOrderHeaderReadDto> approvePO(@PathVariable Long id) {
         PurchaseOrderHeaderReadDto approvedPO = purchaseOrderService.approvePurchaseOrder(id);
         return ResponseEntity.ok(approvedPO);
     }
 
+    /** Nhận hàng (Toàn bộ): APPROVED -> RECEIVED */
     @PostMapping("/{id}/receive")
-    public ResponseEntity<PurchaseOrderHeaderReadDto> receiveGoodsForPO(@PathVariable Long id) {
-        PurchaseOrderHeaderReadDto receivedPO = purchaseOrderService.receiveGoods(id);
+    public ResponseEntity<PurchaseOrderHeaderReadDto> receiveFullGoods(@PathVariable Long id) {
+        PurchaseOrderHeaderReadDto receivedPO = purchaseOrderService.receiveFullGoods(id);
         return ResponseEntity.ok(receivedPO);
+    }
+
+    /** Hủy đơn hàng: DRAFT/APPROVED -> CANCELED */
+    @PostMapping("/{id}/cancel") // ✅ Bổ sung endpoint
+    public ResponseEntity<PurchaseOrderHeaderReadDto> cancelPO(@PathVariable Long id) {
+        PurchaseOrderHeaderReadDto canceledPO = purchaseOrderService.cancelPurchaseOrder(id);
+        return ResponseEntity.ok(canceledPO);
+    }
+
+    /** Đóng đơn hàng: RECEIVED/CANCELED -> CLOSED */
+    @PostMapping("/{id}/close")
+    public ResponseEntity<PurchaseOrderHeaderReadDto> closePO(@PathVariable Long id) {
+        PurchaseOrderHeaderReadDto closedPO = purchaseOrderService.closePurchaseOrder(id);
+        return ResponseEntity.ok(closedPO);
     }
 }

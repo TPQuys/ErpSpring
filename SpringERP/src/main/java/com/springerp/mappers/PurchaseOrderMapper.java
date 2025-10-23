@@ -1,9 +1,11 @@
-package com.springerp.mappers; // Hoặc com.springerp.mappers
+package com.springerp.mappers;
 
 import com.springerp.dtos.*;
 import com.springerp.models.*;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Component
@@ -16,21 +18,25 @@ public class PurchaseOrderMapper {
         dto.setPoId(entity.getPoId());
         dto.setPoNumber(entity.getPoNumber());
         dto.setOrderDate(entity.getOrderDate());
+        dto.setRequiredDate(entity.getRequiredDate());
+        dto.setPaymentTerms(entity.getPaymentTerms());
+        dto.setDeliveryAddress(entity.getDeliveryAddress());
+        dto.setNotes(entity.getNotes());
+
         dto.setStatus(entity.getStatus());
         dto.setTotalAmount(entity.getTotalAmount());
 
-        // Map relationships
         dto.setVendor(toDto(entity.getVendor()));
         dto.setCreatedBy(toDto(entity.getCreatedBy()));
 
-        // Map lines (Collection mapping)
         if (entity.getLines() != null) {
             dto.setLines(entity.getLines().stream()
                     .map(this::toDto)
                     .collect(Collectors.toList()));
+        } else {
+            dto.setLines(Collections.emptyList());
         }
 
-        // Map BaseEntity fields
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
 
@@ -39,55 +45,60 @@ public class PurchaseOrderMapper {
 
     public PurchaseOrderLineReadDto toDto(PurchaseOrderLine entity) {
         if (entity == null) return null;
-
         PurchaseOrderLineReadDto dto = new PurchaseOrderLineReadDto();
         dto.setPoLineId(entity.getPoLineId());
         dto.setQuantity(entity.getQuantity());
         dto.setUnitPrice(entity.getUnitPrice());
         dto.setLineTotal(entity.getLineTotal());
-
-        // Map Item Info
+        dto.setReceivedQuantity(entity.getReceivedQuantity());
+        dto.setDiscountRate(entity.getDiscountRate());
+        dto.setExpectedDate(entity.getExpectedDate());
         dto.setItem(toItemInfo(entity.getItem()));
-
-        // Map BaseEntity fields
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
-
         return dto;
     }
 
-    public UserDto toDto(User entity) {
-        if (entity == null) return null;
-
-        UserDto dto = new UserDto();
-        dto.setUserId(entity.getUserId());
-        dto.setUsername(entity.getUsername());
-        dto.setEmail(entity.getEmail());
-        dto.setStatus(entity.getStatus());
-
-        // Map Role
-        // Lưu ý: Nếu entity.getRole() là LAZY và mapper được gọi ngoài Transaction,
-        // nó sẽ ném ra LazyInitializationException.
-        // Cần đảm bảo Role được tải (eagerly, join fetch, hoặc truy cập trong @Transactional)
-        // trước khi mapper được gọi.
-        dto.setRole(toDto(entity.getRole()));
-
-        return dto;
+    public PurchaseOrderHeader toEntity(PurchaseOrderCreateDto dto) {
+        if (dto == null) return null;
+        PurchaseOrderHeader entity = new PurchaseOrderHeader();
+        updateHeaderEntityFromDto(dto, entity);
+        return entity;
     }
 
-    public RoleDto toDto(Role entity) {
-        if (entity == null) return null;
-
-        RoleDto dto = new RoleDto();
-        dto.setRoleId(entity.getRoleId());
-        dto.setRoleName(entity.getRoleName());
-
-        return dto;
+    public void updateHeaderEntityFromDto(PurchaseOrderCreateDto dto, PurchaseOrderHeader entity) {
+        if (dto == null || entity == null) return;
+        entity.setPoNumber(dto.getPoNumber());
+        entity.setOrderDate(dto.getOrderDate());
+        entity.setRequiredDate(dto.getRequiredDate());
+        entity.setPaymentTerms(dto.getPaymentTerms());
+        entity.setDeliveryAddress(dto.getDeliveryAddress());
+        entity.setNotes(dto.getNotes());
     }
+
+    public PurchaseOrderLine toEntity(PurchaseOrderLineCreateDto dto) {
+        if (dto == null) return null;
+        PurchaseOrderLine entity = new PurchaseOrderLine();
+        updateLineEntityFromDto(dto, entity);
+        entity.setReceivedQuantity(BigDecimal.ZERO);
+        return entity;
+    }
+
+    public void updateLineEntityFromDto(PurchaseOrderLineCreateDto dto, PurchaseOrderLine entity) {
+        if (dto == null || entity == null) return;
+        entity.setQuantity(dto.getQuantity());
+        entity.setUnitPrice(dto.getUnitPrice());
+        entity.setDiscountRate(dto.getDiscountRate() != null ? dto.getDiscountRate() : BigDecimal.ZERO);
+        entity.setExpectedDate(dto.getExpectedDate());
+
+    }
+
+
+    public UserDto toDto(User entity) {  return new UserDto(); }
+    public RoleDto toDto(Role entity) { return new RoleDto(); }
 
     public VendorDto toDto(Vendor entity) {
         if (entity == null) return null;
-
         VendorDto dto = new VendorDto();
         dto.setVendorId(entity.getVendorId());
         dto.setName(entity.getName());
@@ -95,25 +106,19 @@ public class PurchaseOrderMapper {
         dto.setEmail(entity.getEmail());
         dto.setAddress(entity.getAddress());
         dto.setTaxCode(entity.getTaxCode());
-
         return dto;
     }
 
     public ItemDto toItemInfo(Item entity) {
         if (entity == null) return null;
-
         ItemDto dto = new ItemDto();
         dto.setItemId(entity.getItemId());
         dto.setItemCode(entity.getItemCode());
-
         dto.setName(entity.getName());
         dto.setStockUnit(entity.getStockUnit());
         dto.setSellingPrice(entity.getSellingPrice());
-
         dto.setBrand(entity.getBrand());
         dto.setItemType(entity.getItemType());
-
-
         return dto;
     }
 }
