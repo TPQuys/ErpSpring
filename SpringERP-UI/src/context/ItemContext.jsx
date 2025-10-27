@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import { message } from 'antd';
 import { addItem, deleteItem, getItemList, updateItem } from '../api/itemApi';
 import { notify } from '../components/notify';
-
+import { useAuth } from './AuthContext';
 const ItemContext = createContext();
 
 
@@ -10,19 +9,29 @@ export const ItemProvider = ({ children }) => {
     const [allItems, setAllItems] = useState([]);
     const [loadingItems, setLoadingItems] = useState(false);
     const didFetch = useRef(false);
+    const { token } = useAuth();
     const loadItems = useCallback(async () => {
-        setLoadingItems(true);
         try {
             const data = await getItemList();
             setAllItems(data);
         } catch (error) {
             console.error('Load items error:', error);
-            notify.error('Lỗi khi tải dữ liệu Mặt Hàng.');
+            const errorMessage = error.message || 'Lỗi không xác định khi tải Mặt Hàng.';
+            notify.error(errorMessage);
         }
         finally {
             setLoadingItems(false);
         }
     }, []);
+    useEffect(() => {
+        if (token) {
+            if (!didFetch.current) {
+                loadItems();
+                didFetch.current = true;
+            }
+        }
+    }, [loadItems, token]);
+
 
     const addItems = useCallback(async (newItem) => {
         setLoadingItems(true);
@@ -30,11 +39,12 @@ export const ItemProvider = ({ children }) => {
             console.log('Adding item:', newItem);
             const data = await addItem(newItem);
             setAllItems(prev => [...prev, data]);
-            message.success('Thêm Mặt Hàng thành công.');
+            notify.success('Thêm Mặt Hàng thành công.');
+            return data;
         } catch (error) {
             console.error('Add item error:', error);
-            notify.error('Lỗi khi thêm Mặt Hàng.');
-            return new Error('Add item failed');
+            const errorMessage = error.message || 'Lỗi không xác định khi thêm Mặt Hàng.';
+            notify.error(errorMessage);
         } finally {
             setLoadingItems(false);
         }
@@ -48,11 +58,12 @@ export const ItemProvider = ({ children }) => {
             setAllItems(prev => prev.map(item =>
                 item.itemId === data.itemId ? data : item
             ));
-            message.success('Cập nhật Mặt Hàng thành công.');
+            notify.success('Cập nhật Mặt Hàng thành công.');
+            return data;
         } catch (error) {
-            console.error('Update item error:', error);
-            notify.error('Lỗi khi cập nhật Mặt Hàng.');
-            return new Error('Update item failed');
+            console.error('Add item error:', error);
+            const errorMessage = error.message || 'Lỗi không xác định khi cập nhật Mặt Hàng.';
+            notify.error(errorMessage);
         } finally {
             setLoadingItems(false);
         }
@@ -63,23 +74,17 @@ export const ItemProvider = ({ children }) => {
         try {
             await deleteItem(id);
             setAllItems(prev => prev.filter(item => item.itemId !== id));
-            message.success('Xóa Mặt Hàng thành công.');
+            notify.success('Xóa Mặt Hàng thành công.');
         } catch (error) {
-            console.error('Delete item error:', error);
-            notify.error('Lỗi khi xóa Mặt Hàng.');
-            return new Error('Delete item failed');
+            console.error('Add item error:', error);
+            const errorMessage = error.message || 'Lỗi không xác định khi xóa Mặt Hàng.';
+            notify.error(errorMessage);
         } finally {
             setLoadingItems(false);
         }
     }, []);
 
 
-    useEffect(() => {
-        if (!didFetch.current) {
-            loadItems();
-            didFetch.current = true;
-        }
-    }, [loadItems]);
 
     const contextValue = {
         allItems,

@@ -86,7 +86,7 @@ export const getVendorColumns = (handleEdit, handleDelete) => {
                     />
                     <Button 
                         icon={<DeleteOutlined />} 
-                        onClick={() => handleDelete(record.vendorId)} 
+                        onClick={() => handleDelete(record)} 
                         danger
                         size="small"
                     />

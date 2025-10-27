@@ -34,7 +34,10 @@ const AppSider = ({ collapsed, setCollapsed }) => {
         navigate(e.key);
     };
 
-    const selectedKeys = [location.pathname];
+    const selectedKeys = menuItems
+        .map(item => item.key)
+        .filter(key => location.pathname.startsWith(key));
+
 
     const finalMenuItems = [
         ...menuItems,
@@ -71,6 +74,7 @@ const AppSider = ({ collapsed, setCollapsed }) => {
             />
         </Sider>
     );
+
 };
 
 export default AppSider;

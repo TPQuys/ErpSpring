@@ -10,7 +10,8 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('authToken'));
+  const [userId,setUserId] = useState(localStorage.getItem('userId')|| null);
+  const [token, setToken] = useState(localStorage.getItem('authToken')|| null);
   const [isLoggedIn, setIsLoggedIn] = useState(!!token);
   const [loading, setLoading] = useState(false);
 
@@ -27,8 +28,12 @@ export const AuthProvider = ({ children }) => {
 const login = useCallback(async (username, password) => {
     setLoading(true);
     try {
-        const jwtToken = await loginApi(username, password);
-        localStorage.setItem('authToken', jwtToken);
+        const data = await loginApi(username, password);
+        const jwtToken = data.jwtToken;
+        const userId= data.userId;
+        localStorage.setItem('authToken', data.jwtToken);
+        localStorage.setItem('userId', data.userId);
+        setUserId(userId);
         setToken(jwtToken);
         return jwtToken;
     } finally {
@@ -43,6 +48,7 @@ const login = useCallback(async (username, password) => {
   }, []);
 
   const contextValue = {
+    userId,
     isLoggedIn,
     token,
     loading,

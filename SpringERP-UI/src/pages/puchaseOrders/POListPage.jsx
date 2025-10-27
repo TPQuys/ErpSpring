@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, Card, Input, Tag, message, Popconfirm } from 'antd';
+import { Table, Button, Space, Card, Input, Tag, Popconfirm } from 'antd';
 import { PlusOutlined, SearchOutlined, EditOutlined, DeleteOutlined, CheckCircleOutlined, SendOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { getPOList, deletePO, approvePO, cancelPO } from '../../api/purchaseOrderApi';
 import { getPOListColumns } from './poListColumns';
 import POFormModal from './modal/POFormModal';
 import { useNavigate } from 'react-router-dom';
 import { Content } from 'antd/es/layout/layout';
+import { notify } from '../../components/notify';
 
 const POListPage = () => {
     const [pos, setPOs] = useState([]);
@@ -13,7 +14,7 @@ const POListPage = () => {
     const [searchText, setSearchText] = useState('');
 
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [currentPO, setCurrentPO] = useState(null); 
+    const [currentPO, setCurrentPO] = useState(null);
 
     const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ const POListPage = () => {
             setPOs(data);
         } catch (error) {
             console.error('Load PO error:', error);
-            message.error('Lỗi khi tải danh sách Đơn hàng Mua.');
+            notify.error('Lỗi khi tải danh sách Đơn hàng Mua.');
         }
         setLoading(false);
     };
@@ -40,7 +41,7 @@ const POListPage = () => {
 
     const handleOpenEditModal = (record) => {
         if (record.status !== 'DRAFT') {
-            message.warning('Chỉ có thể chỉnh sửa PO ở trạng thái Bản Nháp.');
+            notify.warning('Chỉ có thể chỉnh sửa PO ở trạng thái Bản Nháp.');
             return;
         }
         setCurrentPO(record);
@@ -56,29 +57,29 @@ const POListPage = () => {
         loadPOs();
     };
 
-    const handleAction = async (poId, actionType, confirmMessage) => {
-        if (!window.confirm(confirmMessage)) return;
+    const handleAction = async (poId, actionType, confirmnotify) => {
+        if (!window.confirm(confirmnotify)) return;
 
         try {
             switch (actionType) {
                 case 'delete':
                     await deletePO(poId);
-                    message.success('Xóa PO thành công.');
+                    notify.success('Xóa PO thành công.');
                     break;
                 case 'approve':
                     await approvePO(poId);
-                    message.success('Duyệt PO thành công.');
+                    notify.success('Duyệt PO thành công.');
                     break;
                 case 'cancel':
                     await cancelPO(poId);
-                    message.success('Hủy PO thành công.');
+                    notify.success('Hủy PO thành công.');
                     break;
                 default:
                     return;
             }
             loadPOs();
         } catch (error) {
-            message.error(error.message || 'Thực hiện hành động thất bại.');
+            notify.error(error.notify || 'Thực hiện hành động thất bại.');
         }
     };
 
@@ -103,13 +104,13 @@ const POListPage = () => {
         if (record.status === 'APPROVED') {
             return (
                 <Space size="small">
-                    <Button onClick={() => navigate(`/po/view/${record.poId}`)} size="small">Xem</Button>
+                    <Button onClick={() => navigate(`/purchase-orders/view/${record.poId}`)} size="small">Xem</Button>
                     <Button icon={<CloseCircleOutlined />} onClick={() => handleAction(record.poId, 'cancel', 'Xác nhận hủy đơn hàng đã duyệt?')} danger size="small">Hủy</Button>
-                    <Button icon={<CheckCircleOutlined />} onClick={() => navigate(`/po/receive/${record.poId}`)} type="primary" size="small">Nhận Hàng</Button>
+                    <Button icon={<CheckCircleOutlined />} onClick={() => navigate(`/purchase-orders/receive/${record.poId}`)} type="primary" size="small">Nhận Hàng</Button>
                 </Space>
             );
         }
-        return <Button onClick={() => navigate(`/po/view/${record.poId}`)} size="small">Xem</Button>;
+        return <Button onClick={() => navigate(`/purchase-orders/view/${record.poId}`)} size="small">Xem</Button>;
     };
 
     const columns = getPOListColumns(renderActions);
@@ -133,7 +134,7 @@ const POListPage = () => {
                         placeholder="Tìm kiếm theo Mã PO/Tên NCC"
                         prefix={<SearchOutlined />}
                         value={searchText}
-                        onChange={(e) => setSearchText(e.target.value)} 
+                        onChange={(e) => setSearchText(e.target.value)}
                         style={{ width: 300 }}
                     />
                 </div>
@@ -151,7 +152,7 @@ const POListPage = () => {
                     visible={isModalVisible}
                     onCancel={handleCloseModal}
                     onSuccess={handleSuccess}
-                    currentPO={currentPO} 
+                    currentPO={currentPO}
                 />
             </Card>
         </Content>

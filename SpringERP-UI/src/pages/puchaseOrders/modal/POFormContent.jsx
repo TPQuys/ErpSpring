@@ -1,25 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Select, Button, DatePicker, Row, Col, Table, Space, InputNumber, Divider, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { getPOById } from '../../../api/purchaseOrderApi';
 import paymentOptions from '../../../data/paymentOptions.json';
 import moment from 'moment';
-import { useItemContext } from '../../../context/ItemContext';  
+import { useItemContext } from '../../../context/ItemContext';
 import { getLineItemColumns } from './LineItemColumns';
 import FormList from 'antd/es/form/FormList';
 import { useVendorContext } from '../../../context/VendorContext';
+import { generalId } from '../../../api/purchaseOrderApi';
 
 const { Option } = Select;
 
 const POFormContent = ({ form, currentPO }) => {
     const { allVendors } = useVendorContext();
     const { allItems } = useItemContext();
+    const [newId, setNewId] = useState("")
 
     const isEditing = !!currentPO?.poId;
 
+    const generalNewId = async () => {
+        const response = await generalId()
+        setNewId(response)
+    }
+
+    useEffect(() => {
+        generalNewId()
+    }, [])
+
     useEffect(() => {
         form.resetFields();
-
         const setFormData = async () => {
             if (isEditing) {
                 try {
@@ -47,6 +57,7 @@ const POFormContent = ({ form, currentPO }) => {
             } else {
                 form.setFieldsValue({
                     orderDate: moment(),
+                    poNumber: newId,
                     paymentTerms: paymentOptions[0],
                     lines: [{ quantity: 1, unitPrice: 0, discountRate: 0, lineTotal: 0 }],
                 });
@@ -54,7 +65,7 @@ const POFormContent = ({ form, currentPO }) => {
         };
         setFormData();
 
-    }, [currentPO, isEditing, form]);
+    }, [currentPO, isEditing, form, newId]);
 
     const calculateLineTotal = (index) => {
         const lines = form.getFieldValue('lines');
@@ -73,7 +84,7 @@ const POFormContent = ({ form, currentPO }) => {
 
     // Khởi tạo columns bằng cách gọi hàm đã tách
     const lineItemColumns = (remove, fields) =>
-        getLineItemColumns(remove, fields, allItems, form, calculateLineTotal);
+        getLineItemColumns(remove, fields, allItems , form, calculateLineTotal);
 
     return (
         <Form
@@ -85,7 +96,7 @@ const POFormContent = ({ form, currentPO }) => {
             <Row gutter={24}>
                 <Col span={6}>
                     <Form.Item name="poNumber" label="Mã PO" rules={[{ required: true, message: 'Nhập mã PO!' }]}>
-                        <Input placeholder="Ví dụ: PO-2024-0001" disabled={isEditing} />
+                        <Input placeholder="Ví dụ: PO-2024-0001" disabled={true} />
                     </Form.Item>
                 </Col>
                 <Col span={6}>
@@ -148,7 +159,6 @@ const POFormContent = ({ form, currentPO }) => {
                                 block
                                 icon={<PlusOutlined />}
                                 style={{ marginTop: 8 }}
-                                disabled={isEditing}
                             >
                                 Thêm Mặt hàng
                             </Button>

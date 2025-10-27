@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { getVendorList, createVendor, updateVendor, deleteVendor } from '../api/vendorApi';
 import { notify } from '../components/notify';
-
+import { useAuth } from './AuthContext';
 const VendorContext = createContext();
 
 export const VendorProvider = ({ children }) => {
     const [allVendors, setAllVendors] = useState([]);
     const [loadingVendors, setLoadingVendors] = useState(false);
+    const { token } = useAuth();
     const didFetch = useRef(false);
     const loadVendors = useCallback(async () => {
         setLoadingVendors(true);
@@ -21,28 +22,35 @@ export const VendorProvider = ({ children }) => {
     }, []);
 
     useEffect(() => {
-        if (!didFetch.current) {
-            loadVendors();
-            didFetch.current = true;
+        if (token) {
+            if (!didFetch.current) {
+                loadVendors();
+                didFetch.current = true;
+            }
         }
-    }, [loadVendors]);
+    }, [loadVendors, token]);
 
     const createNewVendor = async (vendorData) => {
+        setLoadingVendors(true);
         try {
-            const newVendor = await createVendor(vendorData); 
-
+            const newVendor = await createVendor(vendorData);
             setAllVendors(prevVendors => [...prevVendors, newVendor]);
             notify.success(`Thêm Nhà Cung Cấp thành công!`);
             return newVendor;
         } catch (error) {
-            notify.error('Lỗi khi thêm Nhà Cung Cấp.');
-            throw error;
+            console.error('Lỗi thêm nhà cung cấp:', error);
+            const errorMessage = error.message || 'Lỗi không xác định khi thêm nhà cung cấp.';
+            notify.error(errorMessage);
+        }
+        finally {
+            setLoadingVendors(false);
         }
     };
 
     const updateExistingVendor = async (vendorId, vendorData) => {
+        setLoadingVendors(true);
         try {
-            const updatedVendor = await updateVendor(vendorId, vendorData); // 1. Gọi API sửa
+            const updatedVendor = await updateVendor(vendorId, vendorData);
 
             setAllVendors(prevVendors =>
                 prevVendors.map(vendor =>
@@ -52,12 +60,17 @@ export const VendorProvider = ({ children }) => {
             notify.success(`Cập nhật Nhà Cung Cấp thành công!`);
             return updatedVendor;
         } catch (error) {
-            notify.error('Lỗi khi cập nhật Nhà Cung Cấp.');
-            throw error;
+            console.error('Lỗi cập nhập nhà cung cấp:', error);
+            const errorMessage = error.message || 'Lỗi không xác định khi cập nhập nhà cung cấp.';
+            notify.error(errorMessage);
+        }
+        finally {
+            setLoadingVendors(false);
         }
     };
 
     const deleteExistingVendor = async (vendorId) => {
+        setLoadingVendors(true);
         try {
             await deleteVendor(vendorId);
 
@@ -66,8 +79,12 @@ export const VendorProvider = ({ children }) => {
             );
             notify.success('Xóa Nhà Cung Cấp thành công.');
         } catch (error) {
-            notify.error('Lỗi khi xóa Nhà Cung Cấp. Vui lòng kiểm tra ràng buộc dữ liệu.');
-            throw error;
+            console.error('Lỗi xóa nhà cung cấp:', error);
+            const errorMessage = error.message || 'Lỗi không xác định khi xóa nhà cung cấp.';
+            notify.error(errorMessage);
+        }
+        finally {
+            setLoadingVendors(false);
         }
     };
 

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { Modal, Form, message } from 'antd';
+import { Modal, Form } from 'antd';
 import VendorFormContent from './VendorFormContent';
 
-const VendorModal = ({ visible, onCancel, onSuccess, vendorToEdit, createVendor, updateVendor }) => {
+const VendorModal = ({ visible, onCancel, vendorToEdit, createVendor, updateVendor }) => {
     const [form] = Form.useForm();
     const isEditing = !!vendorToEdit;
 
@@ -19,18 +19,17 @@ const VendorModal = ({ visible, onCancel, onSuccess, vendorToEdit, createVendor,
     const handleOk = async () => {
         try {
             const values = await form.validateFields();
-            
+            let response;
             if (isEditing) {
-                await updateVendor(vendorToEdit.vendorId, values);
-                message.success('Cập nhật nhà cung cấp thành công!');
+                response = await updateVendor(vendorToEdit.vendorId, values);
             } else {
-                await createVendor(values);
-                message.success('Thêm nhà cung cấp mới thành công!');
+                response = await createVendor(values);
             }
-            onSuccess();
+            if (response) {
+                onCancel();
+            }
         } catch (errorInfo) {
             console.log('Validation Failed or API Error:', errorInfo);
-            message.error('Vui lòng kiểm tra lại thông tin form.');
         }
     };
 

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Space, Form } from 'antd';
-import ItemFormContent from './ItemFormContent'; 
+import ItemFormContent from './ItemFormContent';
 
 const ItemModal = ({ visible, onCancel, itemToEdit, addItem, updateItem }) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
-    const isEditing = !!itemToEdit && !!itemToEdit.itemId; 
+    const isEditing = !!itemToEdit && !!itemToEdit.itemId;
 
     useEffect(() => {
         if (visible) {
-            form.resetFields(); 
+            form.resetFields();
             if (isEditing) {
                 setLoading(true);
                 form.setFieldsValue(itemToEdit);
@@ -19,32 +19,31 @@ const ItemModal = ({ visible, onCancel, itemToEdit, addItem, updateItem }) => {
     }, [visible, isEditing, itemToEdit, form]);
 
     const handleOk = async () => {
-        try {
-            const values = await form.validateFields();
-            setLoading(true);
+        const values = await form.validateFields();
+        let result;
+        setLoading(true);
+        if (isEditing) {
+            result = await updateItem(itemToEdit.itemId, values);
 
-            if (isEditing) {
-                await updateItem(itemToEdit.itemId, values); 
-            } else {
-                await addItem(values);
-            }
-            onCancel(); 
-
-        } catch (error) {
-            console.error('Save item error:', error);
-        } finally {
-            setLoading(false);
+        } else {
+            result = await addItem(values);
         }
+        if (!result) {
+            setLoading(false);
+            return;
+        }
+        onCancel();
+        setLoading(false);
     };
 
     return (
         <Modal
             title={isEditing ? "Chỉnh Sửa Mặt Hàng" : "Tạo Mới Mặt Hàng"}
-            open={visible} 
-            onCancel={onCancel} 
+            open={visible}
+            onCancel={onCancel}
             maskClosable={false}
-            destroyOnHidden={true} 
-            width={800} 
+            destroyOnHidden={true}
+            width={800}
             footer={[
                 <Button key="back" onClick={onCancel} disabled={loading}>
                     Hủy
@@ -54,7 +53,7 @@ const ItemModal = ({ visible, onCancel, itemToEdit, addItem, updateItem }) => {
                 </Button>,
             ]}
         >
-            <ItemFormContent form={form} isEditing={isEditing} /> 
+            <ItemFormContent form={form} isEditing={isEditing} />
         </Modal>
     );
 };

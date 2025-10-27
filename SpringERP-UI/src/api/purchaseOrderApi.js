@@ -6,7 +6,7 @@ export const getPOList = async () => {
         return response.data;
     } catch (error) {
         console.error('Get PO list API error:', error.response?.data);
-        const errorMessage = error.response?.data?.message || error.message || 'Lỗi kết nối server hoặc lỗi không xác định.';
+        const errorMessage = error.response?.data || error.message || 'Lỗi kết nối server hoặc lỗi không xác định.';
         throw new Error(errorMessage);
     }
 };
@@ -17,19 +17,19 @@ export const getPOById = async (id) => {
         return response.data;
     } catch (error) {
         console.error('Get PO by ID API error:', error.response?.data);
-        const errorMessage = error.response?.data?.message || error.message || 'Không thể tải PO chi tiết.';
+        const errorMessage = error.response?.data || error.message || 'Không thể tải PO chi tiết.';
         throw new Error(errorMessage);
     }
 };
 
 export const createPO = async (poDto) => {
     try {
+        console.log('Creating PO with DTO:', poDto);
         const response = await apiClient.post('/purchase-orders', poDto);
-        console.log('PO added:', response.data);
         return response.data;
     } catch (error) {
         console.error('Add PO API error:', error.response?.data);
-        const errorMessage = error.response?.data?.message || error.message || 'Tạo PO thất bại.';
+        const errorMessage = error.response?.data || error.message || 'Tạo PO thất bại.';
         throw new Error(errorMessage);
     }
 };
@@ -41,7 +41,7 @@ export const updatePO = async (id, poDto) => {
         return response.data;
     } catch (error) {
         console.error('Update PO API error:', error.response?.data);
-        const errorMessage = error.response?.data?.message || error.message || 'Cập nhật PO thất bại.';
+        const errorMessage = error.response?.data || error.message || 'Cập nhật PO thất bại.';
         throw new Error(errorMessage);
     }
 };
@@ -53,7 +53,7 @@ export const deletePO = async (id) => {
         return true;
     } catch (error) {
         console.error('Delete PO API error:', error.response?.data);
-        const errorMessage = error.response?.data?.message || error.message || 'Xóa PO thất bại.';
+        const errorMessage = error.response?.data || error.message || 'Xóa PO thất bại.';
         throw new Error(errorMessage);
     }
 };
@@ -80,6 +80,18 @@ export const receiveFullGoods = async (id) => {
     }
 };
 
+export const receiveGoods = async (id, line) => {
+    try {
+        const response = await apiClient.post(`/purchase-orders/${id}/receive-partial`,
+            line
+        );
+        return response.data;
+    } catch (error) {
+        console.error(`Lỗi khi nhập hàng cho PO ${id}:`, error);
+        throw error.response?.data || new Error(`Nhập hàng cho PO ${id} thất bại.`);
+    }
+};
+
 
 export const cancelPO = async (id) => {
     try {
@@ -94,6 +106,16 @@ export const cancelPO = async (id) => {
 export const closePO = async (id) => {
     try {
         const response = await apiClient.post(`/purchase-orders/${id}/close`);
+        return response.data;
+    } catch (error) {
+        console.error(`Lỗi khi đóng PO ${id}:`, error);
+        throw error.response?.data || new Error(`Đóng PO ${id} thất bại.`);
+    }
+};
+
+export const generalId = async (id) => {
+    try {
+        const response = await apiClient.get(`/purchase-orders/general_id`);
         return response.data;
     } catch (error) {
         console.error(`Lỗi khi đóng PO ${id}:`, error);

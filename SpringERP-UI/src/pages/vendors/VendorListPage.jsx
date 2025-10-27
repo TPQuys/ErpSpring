@@ -4,15 +4,15 @@ import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { getVendorColumns } from './vendorListColumns';
 import { useVendorContext } from '../../context/VendorContext';
 import VendorModal from './modal/VendorModal';
+import { notify } from '../../components/notify';
 const { Content } = Layout;
 
 const VendorListPage = () => {
-    const {allVendors, loadingVendors, deleteExistingVendor, createNewVendor, updateExistingVendor} = useVendorContext();
+    const { allVendors, loadingVendors, deleteExistingVendor, createNewVendor, updateExistingVendor } = useVendorContext();
     const [vendors, setVendors] = useState([]);
     const [searchText, setSearchText] = useState('');
-    const [modalVisible, setModalVisible] = useState(false); 
+    const [modalVisible, setModalVisible] = useState(false);
     const [editingVendor, setEditingVendor] = useState(null);
-
 
     useEffect(() => {
         setVendors(allVendors);
@@ -33,31 +33,36 @@ const VendorListPage = () => {
                 taxCode.toLowerCase().includes(lowerCaseValue)
             );
         });
-        
+
         setVendors(filteredData);
     };
 
     const handleOpenModal = () => {
-        setEditingVendor(null); 
+        setEditingVendor(null);
         setModalVisible(true);
     };
 
     const handleEdit = (vendor) => {
-        setEditingVendor(vendor); 
+        setEditingVendor(vendor);
         setModalVisible(true);
     };
 
     const handleDelete = async (vendorId) => {
-        if (window.confirm('Bạn có chắc chắn muốn xóa nhà cung cấp này?')) {
-            try {
-                await deleteExistingVendor(vendorId);
-            } catch (error) {
-                console.error("Delete error: ", error);
-            }
+        try {
+            await deleteExistingVendor(vendorId);
+        } catch (error) {
+            console.error("Delete error: ", error);
         }
     };
+    const handleOpenConfirm = (vendor) => {
+        notify.modal.confirm({
+            title: 'Xác nhận xóa',
+            content: `Bạn có chắc chắn muốn xóa nhà cung cấp "${vendor.vendorCode}" không?`,
+            onOk: () => handleDelete(vendor.vendorId),
+        });
+    }
 
-    const columns = getVendorColumns(handleEdit, handleDelete);
+    const columns = getVendorColumns(handleEdit, handleOpenConfirm);
 
     return (
         <Content style={{ padding: 20 }}>
@@ -98,9 +103,6 @@ const VendorListPage = () => {
                 createVendor={createNewVendor}
                 updateVendor={updateExistingVendor}
                 onCancel={() => setModalVisible(false)}
-                onSuccess={() => {
-                    setModalVisible(false);
-                }}
             />
         </Content>
     );

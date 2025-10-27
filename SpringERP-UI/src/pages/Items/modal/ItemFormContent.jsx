@@ -13,7 +13,17 @@ const ItemFormContent = ({ form, isEditing }) => {
             initialValues={{ 
                 currentStock: 0, 
                 stockUnit: 'Chiếc', 
-                isDiscontinued: false 
+                isDiscontinued: false,
+                itemCode: '1',      
+                name: '2',
+                itemType: 'LAPTOP',
+                brand: '3',
+                modelNumber: '4',   
+                specifications: '5',
+                sellingPrice: 10000000,
+                costPrice: 8000000,
+                notes: '6',
+                discontinued: false,
             }}
         >
             <Row gutter={24}>

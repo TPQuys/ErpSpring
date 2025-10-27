@@ -107,7 +107,7 @@ export const getItemColumns = (handleEdit, handleDelete) => {
                     </Button>
                     <Button
                         icon={<DeleteOutlined />}
-                        onClick={() => handleDelete(record.itemId)}
+                        onClick={() => handleDelete(record)}
                         danger
                         size="small"
                     >

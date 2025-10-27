@@ -8,7 +8,7 @@ import AppProviders from './providers/AppProviders';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <BrowserRouter>
       <AntdApp>
         <AppProviders>
@@ -16,5 +16,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </AppProviders>
       </AntdApp>
     </BrowserRouter>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

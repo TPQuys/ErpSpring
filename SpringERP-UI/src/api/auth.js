@@ -7,11 +7,11 @@ export const loginApi = async (username, password) => {
             password
         });
 
-        const token = response.data.jwtToken;
-        console.log('Login API token:', response.data);
+        const data = response.data;
+        console.log('Login API token:', data);
 
-        if (token) {
-            return token;
+        if (data.jwtToken) {
+            return data;
         } else {
             throw new Error("Không nhận được token từ server.");
         }
