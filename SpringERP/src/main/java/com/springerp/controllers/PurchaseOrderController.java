@@ -2,7 +2,9 @@ package com.springerp.controllers;
 
 import com.springerp.dtos.PurchaseOrderCreateDto;
 import com.springerp.dtos.PurchaseOrderHeaderReadDto;
+import com.springerp.dtos.PurchaseOrderReceiveLineDto;
 import com.springerp.services.PurchaseOrderService;
+import com.springerp.services.SequenceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.List;
 public class PurchaseOrderController {
 
     private final PurchaseOrderService purchaseOrderService;
+    private final SequenceService sequenceService;
 
     @PostMapping
     public ResponseEntity<PurchaseOrderHeaderReadDto> createPO(@RequestBody PurchaseOrderCreateDto dto) {
@@ -60,6 +63,13 @@ public class PurchaseOrderController {
         PurchaseOrderHeaderReadDto receivedPO = purchaseOrderService.receiveFullGoods(id);
         return ResponseEntity.ok(receivedPO);
     }
+    @PostMapping("/{id}/receive-partial")
+    public ResponseEntity<PurchaseOrderHeaderReadDto> receiveGoods(
+            @PathVariable Long id,
+            @RequestBody List<PurchaseOrderReceiveLineDto> receivedLines) {
+        PurchaseOrderHeaderReadDto receivedPO = purchaseOrderService.receiveGoods(id, receivedLines);
+        return ResponseEntity.ok(receivedPO);
+    }
 
     /** Hủy đơn hàng: DRAFT/APPROVED -> CANCELED */
     @PostMapping("/{id}/cancel") // ✅ Bổ sung endpoint
@@ -73,5 +83,10 @@ public class PurchaseOrderController {
     public ResponseEntity<PurchaseOrderHeaderReadDto> closePO(@PathVariable Long id) {
         PurchaseOrderHeaderReadDto closedPO = purchaseOrderService.closePurchaseOrder(id);
         return ResponseEntity.ok(closedPO);
+    }
+
+    @GetMapping("/general_id")
+    public ResponseEntity<String> getGeneralIds() {
+        return ResponseEntity.ok(sequenceService.generateNextPoNumber());
     }
 }

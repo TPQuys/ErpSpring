@@ -94,7 +94,12 @@ public class PurchaseOrderMapper {
     }
 
 
-    public UserDto toDto(User entity) {  return new UserDto(); }
+    public UserDto toDto(User entity) {
+        if (entity == null) return null;
+        UserDto dto = new UserDto();
+        dto.setUsername(entity.getUsername());
+        return dto;
+    }
     public RoleDto toDto(Role entity) { return new RoleDto(); }
 
     public VendorDto toDto(Vendor entity) {
