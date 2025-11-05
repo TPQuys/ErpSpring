@@ -9,6 +9,9 @@ const getStatusTag = (status) => {
         case 'RECEIVED': return <Tag color="green">Đã Nhận Hàng</Tag>;
         case 'CLOSED': return <Tag color="purple">Đã Đóng</Tag>;
         case 'CANCELED': return <Tag color="red">Đã Hủy</Tag>;
+        case 'PARTIALLY_RECEIVED': return <Tag color="green">Đã nhận 1 phần</Tag>;
+        case 'PARTIALLY_INVOICED': return <Tag color="purple">Đã lập hóa đơn 1 phần</Tag>;
+        case 'INVOICED': return <Tag color="purple">Đã lập hóa đơn</Tag>;
         default: return <Tag>{status}</Tag>;
     }
 };
@@ -24,7 +27,9 @@ export const getPOListColumns = (renderActions) => [
             { text: 'Bản Nháp', value: 'DRAFT' },
             { text: 'Đã Duyệt', value: 'APPROVED' },
             { text: 'Đã Nhận Hàng', value: 'RECEIVED' },
+            { text: 'Đã Nhận Hàng 1 phần', value: 'PARTIALLY_RECEIVED' },
             { text: 'Đã Hủy', value: 'CANCELED' },
+            { text: 'Đã lập hóa đơn 1 phần', value: 'PARTIALLY_INVOICED' },
         ],
         onFilter: (value, record) => record.status === value,
         width: 140,

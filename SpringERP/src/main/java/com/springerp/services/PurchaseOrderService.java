@@ -2,6 +2,7 @@ package com.springerp.services;
 
 import com.springerp.dtos.PurchaseOrderCreateDto;
 import com.springerp.dtos.PurchaseOrderHeaderReadDto;
+import com.springerp.dtos.PurchaseOrderLineReadDto;
 import com.springerp.dtos.PurchaseOrderReceiveLineDto;
 import com.springerp.mappers.PurchaseOrderMapper;
 import com.springerp.models.*;
@@ -336,4 +337,69 @@ public class PurchaseOrderService {
             return mapper.toDto(header);
         });
     }
+
+    @Transactional
+    public PurchaseOrderHeaderReadDto InvoicedPurchaseOrder(Long poId) {
+        return handleExceptions(() -> {
+            PurchaseOrderHeader header = findHeaderEntityById(poId);
+            // Nghiệp vụ: Không thể đóng đơn hàng ở trạng thái DRAFT
+            if (header.getStatus() == PurchaseOrderHeader.Status.DRAFT) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Không thể tạo hóa đơn ở trạng thái DRAFT.");
+            }
+            header.setInvoiceStatus(PurchaseOrderHeader.InvoiceStatus.INVOICED);
+            return mapper.toDto(header);
+        });
+    }
+
+    @Transactional
+    public PurchaseOrderHeaderReadDto PartiallyInvoicedPurchaseOrder(Long poId) {
+        return handleExceptions(() -> {
+            PurchaseOrderHeader header = findHeaderEntityById(poId);
+            // Nghiệp vụ: Không thể đóng đơn hàng ở trạng thái DRAFT
+            if (header.getStatus() == PurchaseOrderHeader.Status.DRAFT) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Không thể tạo hóa đơn ở trạng thái DRAFT.");
+            }
+            header.setInvoiceStatus(PurchaseOrderHeader.InvoiceStatus.PARTIALLY_INVOICED);
+            return mapper.toDto(header);
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public List<PurchaseOrderHeaderReadDto> getOpenPurchaseOrdersByVendor(Long vendorId) {
+        return handleExceptions(() -> {
+            // 💡 Trạng thái hóa đơn đã hoàn tất
+            List<PurchaseOrderHeader.InvoiceStatus> excludedInvoiceStatuses = List.of(
+                    PurchaseOrderHeader.InvoiceStatus.INVOICED
+            );
+
+            // 💡 Các trạng thái PO chính không được phép
+            List<PurchaseOrderHeader.Status> excludedHeaderStatuses = List.of(
+                    PurchaseOrderHeader.Status.CANCELED,
+                    PurchaseOrderHeader.Status.CLOSED
+            );
+
+            // **Sử dụng các phương thức repository chính xác:**
+            // (Đây là giả định - bạn cần tạo hoặc sử dụng phương thức JpaRepository phù hợp)
+            List<PurchaseOrderHeader> openPos = poHeaderRepository
+                    .findByVendorVendorIdAndInvoiceStatusNotInAndStatusNotIn(
+                            vendorId,
+                            excludedInvoiceStatuses,
+                            excludedHeaderStatuses
+                    );
+
+            return openPos.stream()
+                    .map(mapper::toDto)
+                    .collect(Collectors.toList());
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public List<PurchaseOrderLineReadDto> getInvoicableLinesByPoId(Long poId) {
+        return handleExceptions(() -> {
+        List<PurchaseOrderLine> lineList = poHeaderRepository.findInvoicableLinesByPoHeaderId(poId);
+        return lineList.stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    });
+        }
 }

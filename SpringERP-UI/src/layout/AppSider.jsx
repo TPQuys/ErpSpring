@@ -15,6 +15,7 @@ const { Sider } = Layout;
 const menuItems = [
     { key: '/dashboard', icon: <DashboardOutlined />, label: 'Dashboard' },
     { key: '/purchase-orders', icon: <ShoppingCartOutlined />, label: 'Quản lý Mua hàng' },
+    { key: '/vendor-invoices', icon: <UserOutlined />, label: 'Quản lý hóa đơn' },
     { key: '/items', icon: <AppstoreOutlined />, label: 'Quản lý Mặt hàng' },
     { key: '/vendors', icon: <ShopOutlined />, label: 'Quản lý nhà cung cấp' },
     { key: '/users', icon: <UserOutlined />, label: 'Quản lý Người dùng' },

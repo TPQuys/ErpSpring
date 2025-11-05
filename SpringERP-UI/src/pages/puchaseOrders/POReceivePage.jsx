@@ -177,6 +177,19 @@ const POReceivePage = () => {
         { title: 'Đơn giá', dataIndex: 'unitPrice', key: 'unitPrice', width: 100 },
     ];
 
+   const getStatusTag = (status) => {
+       switch (status) {
+           case 'DRAFT': return <Tag color="default">Bản Nháp</Tag>;
+           case 'APPROVED': return <Tag color="blue">Đã Duyệt</Tag>;
+           case 'RECEIVED': return <Tag color="green">Đã Nhận Hàng</Tag>;
+           case 'CLOSED': return <Tag color="purple">Đã Đóng</Tag>;
+           case 'CANCELED': return <Tag color="red">Đã Hủy</Tag>;
+           case 'PARTIALLY_RECEIVED': return <Tag color="green">Đã nhận 1 phần</Tag>;
+           case 'PARTIALLY_INVOICED': return <Tag color="purple">Đã lập hóa đơn 1 phần</Tag>;
+           case 'INVOICED': return <Tag color="purple">Đã lập hóa đơn</Tag>;
+           default: return <Tag>{status}</Tag>;
+       }
+   };
     // 4. Render giao diện
     return (
         <Card title={`Nhận Hàng cho Đơn hàng Mua: ${poData.poNumber}`}>
@@ -189,9 +202,7 @@ const POReceivePage = () => {
                         <Text>Ngày đặt: <Text strong>{poData.orderDate}</Text></Text>
                         <Text>Địa chỉ giao: <Text strong>{poData.deliveryAddress}</Text></Text>
                         <Text>Trạng thái hiện tại: 
-                             <Tag color={isReceivingAllowed ? "processing" : "success"}>
-                                 {poData.status}
-                             </Tag>
+                             {getStatusTag(poData.status)}
                         </Text>
                     </Space>
                 </Card>

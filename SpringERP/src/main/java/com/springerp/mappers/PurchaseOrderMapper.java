@@ -50,12 +50,14 @@ public class PurchaseOrderMapper {
         dto.setQuantity(entity.getQuantity());
         dto.setUnitPrice(entity.getUnitPrice());
         dto.setLineTotal(entity.getLineTotal());
+        dto.setInvoicedQuantity(entity.getInvoicedQuantity());
         dto.setReceivedQuantity(entity.getReceivedQuantity());
         dto.setDiscountRate(entity.getDiscountRate());
         dto.setExpectedDate(entity.getExpectedDate());
         dto.setItem(toItemInfo(entity.getItem()));
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
+        dto.setReceivedQuantity(entity.getReceivedQuantity());
         return dto;
     }
 
@@ -81,6 +83,7 @@ public class PurchaseOrderMapper {
         PurchaseOrderLine entity = new PurchaseOrderLine();
         updateLineEntityFromDto(dto, entity);
         entity.setReceivedQuantity(BigDecimal.ZERO);
+        entity.setInvoicedQuantity(BigDecimal.ZERO);
         return entity;
     }
 

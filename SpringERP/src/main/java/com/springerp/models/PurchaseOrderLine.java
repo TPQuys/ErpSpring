@@ -18,6 +18,7 @@ public class PurchaseOrderLine extends BaseEntity {
 
     private BigDecimal quantity;
     private BigDecimal receivedQuantity = BigDecimal.ZERO;
+    private BigDecimal invoicedQuantity = BigDecimal.ZERO;
 
     private BigDecimal unitPrice;
     private BigDecimal discountRate = BigDecimal.ZERO;

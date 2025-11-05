@@ -2,7 +2,9 @@ package com.springerp.services;
 
 import com.springerp.dtos.VendorDto;
 import com.springerp.mappers.VendorMapper;
+import com.springerp.models.PurchaseOrderHeader;
 import com.springerp.models.Vendor;
+import com.springerp.repositories.PurchaseOrderHeaderRepository;
 import com.springerp.repositories.VendorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -91,5 +94,38 @@ public class VendorService {
             vendorRepository.delete(vendor);
             return null;
         });
+    }
+
+    @Transactional(readOnly = true)
+    public List<VendorDto> getVendorsWithInvoiceEligibleOrders() {
+        // 💡 Các trạng thái HÓA ĐƠN cần LOẠI TRỪ (không cần lập hóa đơn nữa)
+        List<PurchaseOrderHeader.InvoiceStatus> excludedInvoiceStatuses = List.of(
+                PurchaseOrderHeader.InvoiceStatus.INVOICED
+        );
+
+        // 💡 Các trạng thái ĐƠN HÀNG chính cần LOẠI TRỪ
+        List<PurchaseOrderHeader.Status> excludedHeaderStatuses = List.of(
+                PurchaseOrderHeader.Status.CANCELED // Trạng thái PO chính đã hủy
+        );
+
+        // Sử dụng Repository để tìm kiếm tất cả các Vendor ID có PO thỏa mãn điều kiện
+        List<Long> vendorIds = vendorRepository
+                .findDistinctVendorIdByInvoiceStatusNotInAndStatusNotIn(
+                        excludedInvoiceStatuses,
+                        excludedHeaderStatuses
+                );
+
+        // Lấy thông tin Vendor từ danh sách ID
+        if (vendorIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Giả sử bạn có một VendorRepository
+        List<Vendor> vendors = vendorRepository.findAllById(vendorIds);
+
+        // Chuyển đổi sang DTO và trả về
+        return vendors.stream()
+                .map(vendorMapper::toDto) // Giả sử bạn có VendorMapper
+                .collect(Collectors.toList());
     }
 }

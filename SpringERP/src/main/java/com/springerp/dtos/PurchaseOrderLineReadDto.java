@@ -2,7 +2,7 @@ package com.springerp.dtos;
 
 import lombok.Data;
 import java.math.BigDecimal;
-import java.time.LocalDate; // ✅ Thêm import
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -11,6 +11,8 @@ public class PurchaseOrderLineReadDto {
 
     private BigDecimal quantity;
     private BigDecimal receivedQuantity;
+    // ✅ THÊM TRƯỜNG MỚI
+    private BigDecimal invoicedQuantity;
 
     private BigDecimal unitPrice;
     private BigDecimal discountRate;

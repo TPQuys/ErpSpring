@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import { getVendorList, createVendor, updateVendor, deleteVendor } from '../api/vendorApi';
+import { getVendorList, createVendor, updateVendor, deleteVendor, getAvailableVendor } from '../api/vendorApi';
 import { notify } from '../components/notify';
 import { useAuth } from './AuthContext';
 const VendorContext = createContext();
@@ -29,6 +29,21 @@ export const VendorProvider = ({ children }) => {
             }
         }
     }, [loadVendors, token]);
+
+    const getVendorByPO = async () => {
+        setLoadingVendors(true);
+        try {
+            const vendors = await getAvailableVendor();
+            return vendors;
+        } catch (error) {
+            console.error('Lỗi lấy nhà cung cấp:', error);
+            const errorMessage = error.message || 'Lỗi không xác định khi lấy nhà cung cấp.';
+            notify.error(errorMessage);
+        }
+        finally {
+            setLoadingVendors(false);
+        }
+    }
 
     const createNewVendor = async (vendorData) => {
         setLoadingVendors(true);
@@ -94,6 +109,7 @@ export const VendorProvider = ({ children }) => {
         loadVendors,
         createNewVendor,
         updateExistingVendor,
+        getVendorByPO,
         deleteExistingVendor
     };
 

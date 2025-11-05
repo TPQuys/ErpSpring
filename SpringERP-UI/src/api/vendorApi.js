@@ -62,6 +62,17 @@ export const getVendorById = async (id) => {
     }
 };
 
+export const getAvailableVendor = async () => {
+    try {
+        const response = await apiClient.get(`/vendors/get-available-vendor`);
+        return response.data;
+    } catch (error) {
+        console.error('Get vendor by ID API error:', error.response?.data);
+        const errorMessage = error.response?.data || error.message || 'Lỗi kết nối server hoặc lỗi không xác định.';
+        throw new Error(errorMessage);
+    }
+};
+
 
 /*
 export const getPaymentTerms = async () => {

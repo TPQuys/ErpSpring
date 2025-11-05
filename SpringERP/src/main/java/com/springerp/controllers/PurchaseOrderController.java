@@ -2,6 +2,7 @@ package com.springerp.controllers;
 
 import com.springerp.dtos.PurchaseOrderCreateDto;
 import com.springerp.dtos.PurchaseOrderHeaderReadDto;
+import com.springerp.dtos.PurchaseOrderLineReadDto;
 import com.springerp.dtos.PurchaseOrderReceiveLineDto;
 import com.springerp.services.PurchaseOrderService;
 import com.springerp.services.SequenceService;
@@ -88,5 +89,24 @@ public class PurchaseOrderController {
     @GetMapping("/general_id")
     public ResponseEntity<String> getGeneralIds() {
         return ResponseEntity.ok(sequenceService.generateNextPoNumber());
+    }
+
+    @GetMapping("/by-vendor/{vendorId}")
+    public ResponseEntity<List<PurchaseOrderHeaderReadDto>> getOpenPosByVendor(@PathVariable Long vendorId) {
+        List<PurchaseOrderHeaderReadDto> pos = purchaseOrderService.getOpenPurchaseOrdersByVendor(vendorId);
+        return ResponseEntity.ok(pos);
+    }
+
+    @GetMapping("/{poId}/invoicable-lines")
+    public ResponseEntity<List<PurchaseOrderLineReadDto>> getInvoicableLines(
+            @PathVariable Long poId) {
+
+        List<PurchaseOrderLineReadDto> lines = purchaseOrderService.getInvoicableLinesByPoId(poId);
+
+        if (lines.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(lines);
     }
 }

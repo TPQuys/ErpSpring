@@ -34,6 +34,11 @@ public class VendorController {
         return ResponseEntity.ok(vendors);
     }
 
+    @GetMapping("/get-available-vendor")
+    public ResponseEntity<List<VendorDto>> getVendorsWithInvoiceEligibleOrders() {
+        List<VendorDto> vendors = vendorService.getVendorsWithInvoiceEligibleOrders();
+        return ResponseEntity.ok(vendors);
+    }
     @PutMapping("/{id}")
     public ResponseEntity<VendorDto> updateVendor(@PathVariable Long id, @Valid @RequestBody VendorDto vendorDto) throws Exception {
         VendorDto updatedVendor = vendorService.updateVendor(id, vendorDto);

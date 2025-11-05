@@ -9,7 +9,8 @@ import VendorPage from './pages/vendors/VendorListPage';
 import PurchaseOrdersPage from './pages/puchaseOrders/POListPage';
 import POReceivePage from './pages/puchaseOrders/POReceivePage';
 import POViewPage from './pages/puchaseOrders/POViewPage';
-
+import VendorInvoices from './pages/vendorInvoices/vendorInvoiceListPage';
+import InvoiceDetail from './pages/vendorInvoices/InvoiceDetail';
 // eslint-disable-next-line no-unused-vars
 import { useAuth } from './context/AuthContext';
 import { App as AntdApp } from "antd";
@@ -41,7 +42,8 @@ function App() {
       <Route path="/purchase-orders" element={<PrivateLayoutRoute element={<PurchaseOrdersPage />} />} />
       <Route path="/purchase-orders/receive/:poId" element={<PrivateLayoutRoute element={<POReceivePage />} />} />
       <Route path="/purchase-orders/view/:poId" element={<PrivateLayoutRoute element={<POViewPage />} />} />
-
+      <Route path="/vendor-Invoices" element={<PrivateLayoutRoute element={<VendorInvoices />} />} />
+      <Route path="/vendor-Invoices/view/:invoiceId" element={<PrivateLayoutRoute element={<InvoiceDetail />} />} />
       <Route path="/items" element={<PrivateLayoutRoute element={<ItemsPage />} />} />
 
       <Route path="/vendors" element={<PrivateLayoutRoute element={<VendorPage />} />} />

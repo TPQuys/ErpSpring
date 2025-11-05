@@ -25,7 +25,11 @@ public class PurchaseOrderHeader extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Status status = Status.DRAFT;
 
+    @Enumerated(EnumType.STRING)
+    private InvoiceStatus invoiceStatus = InvoiceStatus.NONE;
+
     public enum Status { DRAFT, APPROVED, RECEIVED, CLOSED, CANCELED, PARTIALLY_RECEIVED }
+    public enum InvoiceStatus { PARTIALLY_INVOICED, INVOICED, NONE }
 
     private BigDecimal totalAmount;
 
